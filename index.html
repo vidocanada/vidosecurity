@@ -177,11 +177,41 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					<div class="col-md-8 footer-left">
 					<div class="footer-top">
 						<h3>REQUEST A QUOTE</h3>
-						
-						
-					    </div>
-					      <script id="__init-script-inline-widget__">(function(d,t,u,s,e){e=d.getElementsByTagName(t)[0];s=d.createElement(t);s.src=u;s.async=1;e.parentNode.insertBefore(s,e);})(document,'script','//h2bus.cn/chat/php/app.php?widget-init-inline.js');</script>
-				        </div>		
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script type="text/javascript">
+   (function(){
+      // 初始化，这里的 YOUR_PUBLIC_KEY 需要去 EmailJS 后台获取
+      emailjs.init("vvW6IulZGg5cAFR-S");
+   })();
+</script>
+
+<form id="contact-form">
+    <label>姓名:</label>
+    <input type="text" name="user_name" required>
+    
+    <label>邮箱:</label>
+    <input type="email" name="user_email" required>
+    
+    <label>留言内容:</label>
+    <textarea name="message" required></textarea>
+    
+    <button type="submit">发送邮件</button>
+</form>
+
+<script>
+  document.getElementById('contact-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    // 发送表单内容
+    emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', this)
+      .then(function() {
+        alert('邮件发送成功！');
+      }, function(error) {
+        alert('发送失败: ' + JSON.stringify(error));
+      });
+  });
+</script>
+							
 		
 				<div class="col-md-4 footer-left">
 					<div class="footer-top">
