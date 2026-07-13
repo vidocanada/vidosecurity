@@ -1,2 +1,0 @@
-# vidosecurity
-vidosecurity.com
