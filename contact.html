@@ -220,20 +220,20 @@
 <!-- Header -->
 	
 	<!-- /////////////////////////////////////////Content -->
-	<div id="page-content" class="contact-page">
-		<div class="container">
-			<div class="row">
-				<div id="main-content" class="col-md-8">
-					<div class="box">
-						<center><div class="art-header">
-							<h1 class="center">Contact</h1>
-						</div></center>
-						<div class="art-content">
-						    
- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<div id="page-content" class="contact-page">
+	<div class="container">
+		<div class="row">
+			<div id="main-content" class="col-md-8">
+				<div class="box">
+					<center><div class="art-header">
+						<h1 class="center">Contact</h1>
+					</div></center>
+					<div class="art-content">
+					    
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script type="text/javascript">
    (function(){
-      // 初始化，这里的 YOUR_PUBLIC_KEY 需要去 EmailJS 后台获取
+      // 初始化 EmailJS
       emailjs.init("vvW6IulZGg5cAFR-S");
    })();
 </script>
@@ -248,19 +248,49 @@
     <label>Message:</label>
     <textarea name="message" required></textarea>
     
-    <button type="submit">Send </button>
+    <input type="hidden" name="user_ip" id="user_ip" value="Unknown">
+    
+    <button type="submit">Send</button>
 </form>
 
 <script>
+  // 🌟 新增：强制只抓取标准的数字 IPv4 接口（防止返回苹果代理加密字符串）
+  fetch('https://api4.ipify.org?format=json')
+    .then(response => response.json())
+    .then(data => {
+        if(data.ip) {
+            document.getElementById('user_ip').value = data.ip;
+        }
+    })
+    .catch(error => {
+        console.error('Primary IP fetch failed, trying backup...', error);
+        // 备用接口：防万一主接口被个别网络拦截
+        fetch('https://ipapi.co/json/')
+            .then(res => res.json())
+            .then(data => { if(data.ip) document.getElementById('user_ip').value = data.ip; })
+            .catch(e => console.log('All IP providers failed.'));
+    });
+
+  // 提交表单事件
   document.getElementById('contact-form').addEventListener('submit', function(event) {
     event.preventDefault();
     
-    // 发送表单内容
+    // 防止重复点击按钮
+    const submitButton = this.querySelector('button[type="submit"]');
+    submitButton.disabled = true;
+    submitButton.innerText = 'Sending...';
+    
+    // 发送表单内容（此时已包含隐藏的 user_ip 数据）
     emailjs.sendForm('service_hfjor7g', 'template_3j9afai', this)
       .then(function() {
         alert('Sent successfully！');
+        document.getElementById('contact-form').reset(); // 成功后清空表单
+        submitButton.disabled = false;
+        submitButton.innerText = 'Send';
       }, function(error) {
         alert('Failed to send: ' + JSON.stringify(error));
+        submitButton.disabled = false;
+        submitButton.innerText = 'Send';
       });
   });
 </script>
